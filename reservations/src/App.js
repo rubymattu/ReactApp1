@@ -3,6 +3,7 @@ import './App.css';
 import ReservationBanner from './ReservationBanner';
 import ReservationRow from './ReservationRow';
 import ReservationCreator from './ReservationCreator';
+import VisibilityControl from './VisibilityControl';
 
 function App() {
   const [userName, setUserName] = useState("Raveena");
@@ -20,6 +21,9 @@ function App() {
   };
 
   const [showBooked, setShowBooked] = useState(true);
+  const clearBooked = () => {
+    setReservation(reservation.filter(item => !item.booked));
+  };
 
   const toggleRes = (selectedReservation) => {
     const updatedRes = reservation.map((item) =>
@@ -40,7 +44,15 @@ function App() {
     setReservation(updatedRes);
   };
 
-useEffect(() => {
+  const deleteRes = (res) => {
+    if (res.booked) {
+      const updatedRes = reservation.filter(reservation => reservation.name !== reservation.name);
+      setReservation(updatedRes);
+      localStorage.setItem("reservations", JSON.stringify(updatedRes));
+    }
+  };
+
+  useEffect(() => {
     try {
       const data = localStorage.getItem("reservations");
       if (data) {
@@ -91,6 +103,48 @@ useEffect(() => {
           ))}
         </tbody>
       </table>
+
+      <div className="bg-secondary text-white text-center p-2">
+        <VisibilityControl
+          description="Completed Tasks"
+          isChecked={showBooked}
+          callback={(checked) => setShowBooked(checked)} />
+      </div>
+
+
+    {showBooked && (
+        <table className="table table-striped table-bordered">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Time</th>
+              <th>isBooked</th>
+              <th>Action</th> {/* Delete button */}
+            </tr>
+          </thead>
+          <tbody>
+            {reservation.filter(reservation => reservation.booked).map(reservation => (
+            <ReservationRow
+              key={`${reservation.name}-${reservation.time}`}
+              reservation={reservation}
+              toggle={toggleRes}
+              deleteRes={deleteRes} // only passed for incomplete
+            />
+          ))}
+          </tbody>
+        </table>
+          )}
+           {reservation.some(item => item.booked) && (
+        <div className="text-center mt-3">
+          <button
+            className="btn btn-danger"
+            onClick={clearBooked}
+          >
+            Clear All Completed
+          </button>
+        </div>
+      )}
+
     </div>
   );
 }
