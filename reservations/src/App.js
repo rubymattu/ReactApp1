@@ -61,36 +61,38 @@ function App() {
   };
 
 
-useEffect(() => {
-  try {
-    const data = localStorage.getItem("reservations");
-    if (data) {
-      const parsedData = JSON.parse(data);
-      if (Array.isArray(parsedData) && parsedData.length > 0) {
-        setReservation(parsedData);
+  useEffect(() => {
+    try {
+      const data = localStorage.getItem("reservations");
+      if (data) {
+        const parsedData = JSON.parse(data);
+        if (Array.isArray(parsedData) && parsedData.length > 0) {
+          setReservation(parsedData);
+        }
       }
+    } catch (error) {
+      console.error("Failed to load reservations:", error);
     }
-  } catch (error) {
-    console.error("Failed to load reservations:", error);
-  }
-}, []);
-  console.log("Reservations state:", reservation);
+  }, []);
 
   return (
     <div className="container mt-3">
+      {/* Display Banner */}
       <ReservationBanner userName={userName} reservations={reservation} />
 
+      {/* Display Add Reservation */}
       <div className="m-3">
         <ReservationCreator onCreate={createNewReservation} />
       </div>
       
+      {/* Table to show available reservations */}
       <table className="table">
         <thead className="table-dark">
           <tr>
             <th>Name</th>
             <th>Time</th>
             <th>isBooked</th> 
-            <th>Action</th>{/* For edit button */}
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
@@ -105,6 +107,7 @@ useEffect(() => {
         </tbody>
       </table>
 
+      {/* Toggle to display/hide booked reservations */}
       <div className="bg-secondary text-white text-center p-2">
         <VisibilityControl
           description="Booked Reservations"
@@ -112,7 +115,7 @@ useEffect(() => {
           callback={(checked) => setShowBooked(checked)} />
       </div>
 
-
+      {/* Table to show booked reservations */}
       {showBooked && (
         <table className="table">
           <thead>
