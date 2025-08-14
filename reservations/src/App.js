@@ -11,7 +11,15 @@ function App() {
       { name: "Heart Lake Conservation Area", time: "9:00 am - 12:00 noon", booked: false },
       { name: "Heart Lake Conservation Area", time: "12:00 noon - 3:00 pm", booked: false },
       { name: "Heart Lake Conservation Area", time: "3:00 pm - 6:00 pm", booked: true },
-      { name: "Rattlesnake Conservation Area", time: "9:00 am - 12:00 noon", booked: false }
+      { name: "Rattlesnake Conservation Area", time: "9:00 am - 12:00 noon", booked: true },
+      { name: "Rattlesnake Conservation Area", time: "12:00 noon - 3:00 pm", booked: true },
+      { name: "Rattlesnake Conservation Area", time: "3:00 pm - 6:00 pm", booked: false },
+      { name: "Glen Haffy Conservation Area", time: "9:00 am - 12:00 noon", booked: false },
+      { name: "Glen Haffy Conservation Area", time: "12:00 noon - 3:00 pm", booked: true },
+      { name: "Glen Haffy Conservation Area", time: "3:00 pm - 6:00 pm", booked: false },
+      { name: "Mountsberg Conservation Area", time: "9:00 am - 12:00 noon", booked: true },
+      { name: "Mountsberg Conservation Area", time: "12:00 noon - 3:00 pm", booked: false },
+      { name: "Mountsberg Conservation Area", time: "3:00 pm - 6:00 pm", booked: false }
   ]);
 
   const createNewReservation = (newRes) => {
@@ -44,36 +52,29 @@ function App() {
     setReservation(updatedRes);
   };
 
-  const deleteRes = (res) => {
-    if (res.booked) {
-      const updatedRes = reservation.filter(reservation => reservation.name !== reservation.name);
-      setReservation(updatedRes);
-      localStorage.setItem("reservations", JSON.stringify(updatedRes));
-    }
+  const deleteRes = (resToDelete) => {
+    const updatedRes = reservation.filter(
+      item => !(item.name === resToDelete.name && item.time === resToDelete.time)
+    );
+    setReservation(updatedRes);
+    localStorage.setItem("reservations", JSON.stringify(updatedRes));
   };
 
-  useEffect(() => {
-    try {
-      const data = localStorage.getItem("reservations");
-      if (data) {
-        const parsedData = JSON.parse(data);
-        if (Array.isArray(parsedData)) {
-          setReservation(parsedData);
-        }
-      } else {
-        setUserName("Raveena");
-        setReservation([
-          { name: "Heart Lake Conservation Area", time: "9:00 am - 12:00 noon", booked: false },
-          { name: "Heart Lake Conservation Area", time: "12:00 noon - 3:00 pm", booked: false },
-          { name: "Heart Lake Conservation Area", time: "3:00 pm - 6:00 pm", booked: true },
-          { name: "Rattlesnake Conservation Area", time: "9:00 am - 12:00 noon", booked: false }
-        ]);
-        setShowBooked(true);
+
+useEffect(() => {
+  try {
+    const data = localStorage.getItem("reservations");
+    if (data) {
+      const parsedData = JSON.parse(data);
+      if (Array.isArray(parsedData) && parsedData.length > 0) {
+        setReservation(parsedData);
       }
-    } catch (error) {
-      console.error("Failed to load todos:", error);
     }
-  }, []);
+  } catch (error) {
+    console.error("Failed to load reservations:", error);
+  }
+}, []);
+  console.log("Reservations state:", reservation);
 
   return (
     <div className="container mt-3">
@@ -83,10 +84,10 @@ function App() {
         <ReservationCreator onCreate={createNewReservation} />
       </div>
       
-      <table className="table table-striped table-bordered">
+      <table className="table">
         <thead className="table-dark">
           <tr>
-            <th>Reservation Name</th>
+            <th>Name</th>
             <th>Time</th>
             <th>isBooked</th> 
             <th>Action</th>{/* For edit button */}
@@ -106,14 +107,14 @@ function App() {
 
       <div className="bg-secondary text-white text-center p-2">
         <VisibilityControl
-          description="Completed Tasks"
+          description="Booked Reservations"
           isChecked={showBooked}
           callback={(checked) => setShowBooked(checked)} />
       </div>
 
 
-    {showBooked && (
-        <table className="table table-striped table-bordered">
+      {showBooked && (
+        <table className="table">
           <thead>
             <tr>
               <th>Name</th>
@@ -133,8 +134,8 @@ function App() {
           ))}
           </tbody>
         </table>
-          )}
-           {reservation.some(item => item.booked) && (
+      )}
+      {reservation.some(item => item.booked) && (
         <div className="text-center mt-3">
           <button
             className="btn btn-danger"
@@ -144,7 +145,6 @@ function App() {
           </button>
         </div>
       )}
-
     </div>
   );
 }

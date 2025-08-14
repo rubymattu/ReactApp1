@@ -1,38 +1,73 @@
-.App {
-  text-align: center;
+/* App.css - Dashboard Layout */
+
+/* Global Styles */
+body {
+  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f5f7fa;
+  margin: 0;
+  padding: 0;
+  color: #2c3e50;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+/* Container */
+.container {
+  max-width: 1100px;
+  margin: 2rem auto;
+  padding: 2rem 5rem;
+  border-radius: 8px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  gap: 2rem;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.226);
 }
 
-.App-link {
-  color: #61dafb;
+/* Buttons */
+button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  margin-left: 5px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
+button:hover {
+  opacity: 0.9;
+}
+
+.btn-edit { background-color: #f39c12; color: #fff; }
+.btn-save { background-color: #2ecc71; color: #fff; }
+.btn-delete { background-color: #e74c3c; color: #fff; }
+
+/* Form Inputs */
+form input,
+form select {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid #d1d8e0;
+  width: 100%;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  accent-color: #3498db;
+  cursor: pointer;
+}
+
+form input:focus,
+form select:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 6px rgba(52, 152, 219, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .panels {
+    flex-direction: column;
   }
 }
